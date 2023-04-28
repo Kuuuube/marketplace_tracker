@@ -19,7 +19,7 @@ def ebay_page_parser(request_delay):
             title = re.findall("(?<=alt=\").*?(?=\"></div></a></div>)", listing_container)
             price = re.findall("(?<=<span class=s-item__price>).*?(?=</span></div>)", listing_container)
             shipping = [*re.findall("(?<=<span class=\"s-item__dynamic s-item__freeXDays\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"s-item__shipping s-item__logisticsCost\">).*?(?=</span>)", listing_container)]
-            purchase_option = [*re.findall("(?<=<span class=\"s-item__dynamic s-item__purchaseOptionsWithIcon\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"s-item__dynamic s-item__buyItNowOption\">).*?(?=</span>)", listing_container)]
+            purchase_option = [*re.findall("(?<=<span class=\"s-item__dynamic s-item__purchaseOptionsWithIcon\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"s-item__dynamic s-item__buyItNowOption\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"s-item__purchase-options s-item__purchaseOptions\">).*?(?=</span>)", listing_container)]
             bidcount = re.findall("(?<=<span class=\"s-item__bids s-item__bidCount\">).*?(?=</span>)", listing_container)
 
             if len(url) > 0:
