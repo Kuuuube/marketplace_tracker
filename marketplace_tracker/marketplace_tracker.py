@@ -24,10 +24,25 @@ def ebay_handler():
 
     json_handler.rewrite_json_dict(json_file, listings_dict, new_items)
 
-    webhook_handler.send_webhook(discord_webhook_url, new_items, webhook_send_delay)
+    webhook_handler.send_ebay_webhook(discord_webhook_url, new_items, webhook_send_delay)
+
+def yahoo_auctions_handler():
+    yahoo_aucitons_url_list = page_parser.yahoo_auctions_page_parser(request_delay)
+
+    new_items = []
+
+    for item in yahoo_aucitons_url_list:
+        listings_dict = json_handler.read_json_dict(json_file)
+        if item["url"] not in listings_dict:
+            new_items.append(item)
+
+    json_handler.rewrite_json_dict(json_file, listings_dict, new_items)
+
+    webhook_handler.send_yahoo_auctions_webhook(discord_webhook_url, new_items, webhook_send_delay)
 
 while True:
     ebay_handler()
+    yahoo_auctions_handler()
 
     print("Batch complete, waiting: " + str(batch_delay) + " seconds")
     time.sleep(batch_delay)
