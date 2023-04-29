@@ -33,7 +33,7 @@ def ebay_page_parser(request_delay):
                 item_info["thumbnail"] = ""
 
             if len(title) > 0:
-                item_info["title"] = strip_excess_html(title[0])
+                item_info["title"] = re.sub("&#34;", "\"", strip_excess_html(title[0]))
             else:
                 item_info["title"] = ""
 
