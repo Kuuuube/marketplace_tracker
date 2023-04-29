@@ -1,6 +1,7 @@
 import re
 import requests
 import time
+import error_logger
 
 def ebay_page_parser(request_delay):
     ebay_url_request_list = []
@@ -10,7 +11,12 @@ def ebay_page_parser(request_delay):
 
     item_info_list = []
     for request_url in ebay_url_request_list:
-        ebay_page = requests.get(request_url).text
+        try:
+            ebay_page = requests.get(request_url).text
+        except Exception as e:
+            error_logger.error_log("eBay request failed", e)
+            continue
+
         listing_containers = re.findall("<li data-viewport=.*?</div></li>", ebay_page)
         for listing_container in listing_containers:
             item_info = {}
@@ -80,7 +86,12 @@ def yahoo_auctions_page_parser(request_delay):
     item_info_list = []
     for request_url in yahoo_auctions_url_request_list:
         headers = {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0", "Accept-Encoding": "gzip, deflate, br"}
-        yahoo_auctions_page = requests.get(request_url, headers=headers).text.replace("\n", "").replace("\r", "")
+        try:
+            yahoo_auctions_page = requests.get(request_url, headers=headers).text.replace("\n", "").replace("\r", "")
+        except Exception as e:
+            error_logger.error_log("Yahoo Auctions request failed", e)
+            continue
+
         listing_containers = re.findall("<li class=\"Product\">.*?</li>", yahoo_auctions_page)
         for listing_container in listing_containers:
             item_info = {}

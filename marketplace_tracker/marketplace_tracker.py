@@ -15,6 +15,9 @@ json_file = "listings.json"
 def ebay_handler():
     ebay_url_list = page_parser.ebay_page_parser(request_delay)
 
+    if len(ebay_url_list) < 1:
+        return
+
     new_items = []
 
     for item in ebay_url_list:
@@ -28,6 +31,9 @@ def ebay_handler():
 
 def yahoo_auctions_handler():
     yahoo_aucitons_url_list = page_parser.yahoo_auctions_page_parser(request_delay)
+
+    if len(yahoo_aucitons_url_list) < 1:
+        return
 
     new_items = []
 
