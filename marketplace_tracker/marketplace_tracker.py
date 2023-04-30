@@ -1,8 +1,8 @@
 import time
 import json_handler
 import config_handler
-import parser.ebay, parser.yahoo_auctions, parser.rakuma
-import webhook.ebay, webhook.yahoo_auctions, webhook.rakuma
+import parser.ebay, parser.yahoo_auctions, parser.rakuma, parser.mercari_jp
+import webhook.ebay, webhook.yahoo_auctions, webhook.rakuma, webhook.mercari_jp
 
 discord_webhook_url = config_handler.read("config.cfg", "webhook", "discord_webhook_url")
 
@@ -32,6 +32,7 @@ while True:
     listing_check(parser.ebay.page_parser, webhook.ebay.send_webhook, "url")
     listing_check(parser.yahoo_auctions.page_parser, webhook.yahoo_auctions.send_webhook, "url")
     listing_check(parser.rakuma.page_parser, webhook.rakuma.send_webhook, "url")
+    listing_check(parser.mercari_jp.page_parser, webhook.mercari_jp.send_webhook, "url")
 
     print("Batch complete, waiting: " + str(batch_delay) + " seconds")
     time.sleep(batch_delay)
