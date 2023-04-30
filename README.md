@@ -6,5 +6,6 @@ Currently supported:
 
 - eBay
 - Yahoo Auctions
+- Rakuma
 
 Full documentation coming soon.
