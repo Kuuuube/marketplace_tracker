@@ -22,7 +22,7 @@ def send_webhook(url, new_items, webhook_send_delay):
                         "url": get_bigger_thumbnail(item["thumbnail"])
                     },
                     "footer": {
-                        "text": utc_time
+                        "text": "eBay · " + utc_time
                     }
                 }
             ]

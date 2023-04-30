@@ -21,7 +21,7 @@ def send_webhook(url, new_items, webhook_send_delay):
                         "url": item["thumbnail"]
                     },
                     "footer": {
-                        "text": utc_time
+                        "text": "Yahoo Auctions · " + utc_time
                     }
                 }
             ]
