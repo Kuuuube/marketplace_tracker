@@ -7,5 +7,6 @@ Currently supported:
 - eBay
 - Yahoo Auctions
 - Rakuma
+- Mercari JP
 
 Full documentation coming soon.
