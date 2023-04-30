@@ -29,8 +29,13 @@ def page_parser(request_delay):
             error_logger.error_log("Mercari JP request failed", e)
             continue
 
-        json_listings = json.loads(page.text)
-        for listing in json_listings["data"]:
+        try:
+            json_listings = json.loads(page.text)["data"]
+        except Exception as e:
+            error_logger.error_log("Mercari JP json invalid: " + page.text, e)
+            continue
+
+        for listing in json_listings:
             item_info = {}
             url = "https://jp.mercari.com/item/" + listing["id"]
             thumbnail = listing["thumbnails"][0]
