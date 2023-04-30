@@ -33,7 +33,7 @@ def send_webhook(url, new_items, webhook_send_delay):
         time.sleep(webhook_send_delay)
 
 def assemble_embed_field(item):
-    assembled_string = item["title"] + "\n" + "¥" + add_commas(item["price"])
+    assembled_string = "¥" + add_commas(item["price"])
     return assembled_string
 
 def add_commas(string):
