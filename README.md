@@ -8,5 +8,6 @@ Currently supported:
 - Yahoo Auctions
 - Rakuma
 - Mercari JP
+- Mercari US
 
 Full documentation coming soon.
