@@ -1,9 +1,9 @@
+import importlib
+import os
 import time
 from datetime import datetime,timezone
 import json_handler
 import config_handler
-import parser.ebay, parser.yahoo_auctions, parser.rakuma, parser.mercari_jp, parser.mercari_us, parser.tradera
-import webhook.ebay, webhook.yahoo_auctions, webhook.rakuma, webhook.mercari_jp, webhook.mercari_us, webhook.tradera
 
 discord_webhook_url = config_handler.read("config.cfg", "webhook", "discord_webhook_url")
 
@@ -12,6 +12,17 @@ request_delay = int(config_handler.read("config.cfg", "requests", "request_send_
 batch_delay = int(config_handler.read("config.cfg", "requests", "batch_delay"))
 
 json_file = "listings.json"
+
+marketplace_modules = {}
+
+def import_folders(*folders):
+    for folder in folders:
+        for module_file in os.listdir(os.path.dirname(__file__) + "/" + folder):
+            if module_file.endswith(".py"):
+                module_name = module_file.replace(".py", "")
+                if module_name not in marketplace_modules.keys():
+                    marketplace_modules[module_name] = {}
+                marketplace_modules[module_name][folder] = importlib.import_module(folder + "." + module_name)
 
 def listing_check(parser_func, webhook_func, differentiating_key):
     url_list = parser_func(request_delay)
@@ -29,13 +40,15 @@ def listing_check(parser_func, webhook_func, differentiating_key):
 
     webhook_func(discord_webhook_url, new_items, webhook_send_delay)
 
+#imports everything in the parser and webhook folders
+import_folders("parser", "webhook")
+
 while True:
-    listing_check(parser.ebay.page_parser, webhook.ebay.send_webhook, "url")
-    listing_check(parser.yahoo_auctions.page_parser, webhook.yahoo_auctions.send_webhook, "url")
-    listing_check(parser.rakuma.page_parser, webhook.rakuma.send_webhook, "url")
-    listing_check(parser.mercari_jp.page_parser, webhook.mercari_jp.send_webhook, "url")
-    listing_check(parser.mercari_us.page_parser, webhook.mercari_us.send_webhook, "url")
-    listing_check(parser.tradera.page_parser, webhook.tradera.send_webhook, "url")
+    for marketplace_module in marketplace_modules.values():
+        if "parser" not in marketplace_module.keys() or "webhook" not in marketplace_module.keys():
+            continue
+
+        listing_check(marketplace_module["parser"].page_parser, marketplace_module["webhook"].send_webhook, "url")
 
     utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
     print(utc_time + " Batch complete, waiting: " + str(batch_delay) + " seconds")
