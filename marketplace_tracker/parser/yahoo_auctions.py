@@ -25,8 +25,8 @@ def page_parser(request_delay):
             url = re.findall("(?<=href=\")https://page.auctions.yahoo.co.jp/jp/auction/.*?(?=\")", listing_container)
             thumbnail = re.findall("(?<=data-auction-img=\").*?(?=\")", listing_container)
             title = re.findall("(?<=data-auction-title=\").*?(?=\")", listing_container)
-            price = re.findall("(?<=<span class=\"Product__priceValue u-textRed\">).*?(?=</span>)", listing_container)
-            buy_now_price = re.findall("(?<=<span class=\"Product__priceValue\">).*?(?=</span>)", listing_container)
+            price = re.findall("(?<=<span class=\"Product__label\">現在</span><span class=\"Product__priceValue u-textRed\">).*?(?=</span>)", listing_container)
+            buy_now_price = [*re.findall("(?<=span class=\"Product__label\">即決</span><span class=\"Product__priceValue u-textRed\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"Product__priceValue\">).*?(?=</span>)", listing_container)]
             bidcount = re.findall("(?<=<span class=\"Product__bid\">).*?(?=</span>)", listing_container)
             time_remaining = re.findall("(?<=<span class=\"Product__time\">).*?(?=</span>)", listing_container)
 
@@ -45,7 +45,7 @@ def page_parser(request_delay):
             else:
                 item_info["title"] = ""
 
-            if len(price):
+            if len(price) > 0:
                 item_info["price"] = strip_excess_html(price[0])
             else:
                 item_info["price"] = ""
