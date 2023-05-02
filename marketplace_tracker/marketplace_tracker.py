@@ -2,8 +2,8 @@ import time
 from datetime import datetime,timezone
 import json_handler
 import config_handler
-import parser.ebay, parser.yahoo_auctions, parser.rakuma, parser.mercari_jp, parser.mercari_us
-import webhook.ebay, webhook.yahoo_auctions, webhook.rakuma, webhook.mercari_jp, webhook.mercari_us
+import parser.ebay, parser.yahoo_auctions, parser.rakuma, parser.mercari_jp, parser.mercari_us, parser.tradera
+import webhook.ebay, webhook.yahoo_auctions, webhook.rakuma, webhook.mercari_jp, webhook.mercari_us, webhook.tradera
 
 discord_webhook_url = config_handler.read("config.cfg", "webhook", "discord_webhook_url")
 
@@ -35,6 +35,7 @@ while True:
     listing_check(parser.rakuma.page_parser, webhook.rakuma.send_webhook, "url")
     listing_check(parser.mercari_jp.page_parser, webhook.mercari_jp.send_webhook, "url")
     listing_check(parser.mercari_us.page_parser, webhook.mercari_us.send_webhook, "url")
+    listing_check(parser.tradera.page_parser, webhook.tradera.send_webhook, "url")
 
     utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
     print(utc_time + " Batch complete, waiting: " + str(batch_delay) + " seconds")
