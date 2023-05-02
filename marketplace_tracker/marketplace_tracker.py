@@ -15,14 +15,14 @@ json_file = "listings.json"
 
 marketplace_modules = {}
 
-def import_folders(*folders):
+def import_folders(*folders, modules_dict):
     for folder in folders:
         for module_file in os.listdir(os.path.dirname(__file__) + "/" + folder):
             if module_file.endswith(".py"):
                 module_name = module_file.replace(".py", "")
-                if module_name not in marketplace_modules.keys():
-                    marketplace_modules[module_name] = {}
-                marketplace_modules[module_name][folder] = importlib.import_module(folder + "." + module_name)
+                if module_name not in modules_dict.keys():
+                    modules_dict[module_name] = {}
+                modules_dict[module_name][folder] = importlib.import_module(folder + "." + module_name)
 
 def listing_check(parser_func, webhook_func, differentiating_key):
     url_list = parser_func(request_delay)
@@ -40,8 +40,8 @@ def listing_check(parser_func, webhook_func, differentiating_key):
 
     webhook_func(discord_webhook_url, new_items, webhook_send_delay)
 
-#imports everything in the parser and webhook folders
-import_folders("parser", "webhook")
+#imports parser and webhook folders to marketplace_modules dict
+import_folders("parser", "webhook", modules_dict=marketplace_modules)
 
 while True:
     for marketplace_module in marketplace_modules.values():
