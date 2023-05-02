@@ -37,10 +37,10 @@ def page_parser(request_delay):
 
         for listing in json_listings:
             item_info = {}
-            url = "https://jp.mercari.com/item/" + listing["id"]
-            thumbnail = listing["thumbnails"][0]
-            title = listing["name"]
-            price = listing["price"]
+            url = "https://jp.mercari.com/item/" + try_json(listing, "id")
+            thumbnail = try_json(listing, "thumbnails", 0)
+            title = try_json(listing, "name")
+            price = try_json(listing, "price")
 
             item_info["url"] = url
             item_info["thumbnail"] = thumbnail
@@ -52,6 +52,16 @@ def page_parser(request_delay):
         time.sleep(request_delay)
 
     return item_info_list
+
+def try_json(json, key, index = None):
+    try:
+        if index == None:
+            return json[key]
+        else:
+            return json[key][index]
+    except Exception as e:
+        error_logger.error_log("Mercari JP json key invalid: " + str(key), e)
+        return ""
 
 #taken from https://github.com/marvinody/mercari/blob/master/mercari/DpopUtils.py with minor modifications
 def intToBytes(n):

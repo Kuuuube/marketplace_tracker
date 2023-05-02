@@ -83,10 +83,10 @@ def page_parser(request_delay):
 
         for listing in json_listings:
             item_info = {}
-            url = "https://www.mercari.com/us/item/" + listing["id"]
-            thumbnail = listing["photos"][0]["thumbnail"]
-            title = listing["name"]
-            price = listing["price"]
+            url = "https://www.mercari.com/us/item/" + try_json(listing, "id")
+            thumbnail = try_json(listing, "photos", 0, "thumbnail")
+            title = try_json(listing, "name")
+            price = try_json(listing, "price")
 
             item_info["url"] = url
             item_info["thumbnail"] = thumbnail
@@ -98,3 +98,15 @@ def page_parser(request_delay):
         time.sleep(request_delay)
 
     return item_info_list
+
+def try_json(json, key, index = None, key_2 = None):
+    try:
+        if index == None:
+            return json[key]
+        elif key_2 == None:
+            return json[key][index]
+        else:
+            return json[key][index][key_2]
+    except Exception as e:
+        error_logger.error_log("Mercari US json key invalid: " + str(key), e)
+        return ""
