@@ -9,5 +9,6 @@ Currently supported:
 - Rakuma
 - Mercari JP
 - Mercari US
+- Tradera
 
 Full documentation coming soon.
