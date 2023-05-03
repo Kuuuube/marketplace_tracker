@@ -4,11 +4,12 @@ Tracks new listings on online marketplaces and posts to webhooks.
 
 Currently supported:
 
+- Blocket
 - eBay
-- Yahoo Auctions
-- Rakuma
 - Mercari JP
 - Mercari US
+- Rakuma
 - Tradera
+- Yahoo Auctions
 
 Full documentation coming soon.
