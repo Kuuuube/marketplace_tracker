@@ -2,6 +2,7 @@ import configparser
 
 def read(config_file, section, name = None, delimiters = ['=', ':']):
     config = configparser.ConfigParser(allow_no_value=True, delimiters=delimiters)
+    config.optionxform = str #makes it case sensitive
     config.read(config_file)
 
     if section not in config and name == None:
