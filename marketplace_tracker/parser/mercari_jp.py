@@ -56,7 +56,7 @@ def try_json(*keys, json_file):
         current_json = json_file
         for key in keys:
             current_json = current_json[key]
-        return current_json
+        return str(current_json)
     except Exception as e:
         error_logger.error_log("Mercari JP json keys invalid: " + str(keys), e)
         return ""
