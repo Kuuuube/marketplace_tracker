@@ -1,7 +1,7 @@
 import configparser
 
-def read(config_file, section, name = None):
-    config = configparser.ConfigParser(allow_no_value=True)
+def read(config_file, section, name = None, delimiters = ['=', ':']):
+    config = configparser.ConfigParser(allow_no_value=True, delimiters=delimiters)
     config.read(config_file)
 
     if section not in config and name == None:

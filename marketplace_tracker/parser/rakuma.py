@@ -3,12 +3,10 @@ import requests
 import time
 import error_logger
 import html
+import config_handler
 
 def page_parser(request_delay):
-    url_request_list = []
-    with open("rakuma_url_list.txt", "r") as url_request_list_raw:
-        url_request_list_lines = url_request_list_raw.readlines()
-        url_request_list = list(map(str.strip, url_request_list_lines))
+    url_request_list = config_handler.read("urls.cfg", "rakuma", delimiters=["\n"])
 
     item_info_list = []
     for request_url in url_request_list:
