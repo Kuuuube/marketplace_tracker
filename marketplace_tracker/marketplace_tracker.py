@@ -36,7 +36,7 @@ def listing_check(parser_func, webhook_func, differentiating_key):
         if item[differentiating_key] not in listings_dict:
             new_items.append(item)
 
-    json_handler.rewrite_json_dict(json_file, listings_dict, new_items)
+    json_handler.rewrite_json_dict(json_file, listings_dict, new_items, differentiating_key)
 
     webhook_func(discord_webhook_url, new_items, webhook_send_delay)
 
