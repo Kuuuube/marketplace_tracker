@@ -5,6 +5,9 @@ import time
 import error_logger
 import config_handler
 
+def get_differentiating_key():
+    return "url"
+
 def page_parser(request_delay):
     url_request_list = config_handler.read("urls.cfg", "blocket", delimiters=["\n"])
 

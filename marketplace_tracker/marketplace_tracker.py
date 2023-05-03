@@ -48,7 +48,7 @@ while True:
         if "parser" not in marketplace_module.keys() or "webhook" not in marketplace_module.keys():
             continue
 
-        listing_check(marketplace_module["parser"].page_parser, marketplace_module["webhook"].send_webhook, "url")
+        listing_check(marketplace_module["parser"].page_parser, marketplace_module["webhook"].send_webhook, marketplace_module["parser"].get_differentiating_key())
 
     utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
     print(utc_time + " Batch complete, waiting: " + str(batch_delay) + " seconds")
