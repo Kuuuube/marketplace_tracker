@@ -56,6 +56,8 @@ def listing_check(parser_func, webhook_func, differentiating_key):
 import_folders("parser", "webhook", modules_dict=marketplace_modules)
 
 while True:
+    utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
+    print(utc_time + " Batch started")
     for marketplace_module in marketplace_modules.values():
         if "parser" not in marketplace_module.keys() or "webhook" not in marketplace_module.keys():
             continue
