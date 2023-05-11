@@ -40,15 +40,9 @@ def listing_check(parser_func, webhook_func, differentiating_key):
 
     json_handler.rewrite_json_dict(json_file, listings_dict, new_items, differentiating_key)
 
-    sent_items = []
     for item in new_items:
         webhook_data = webhook_func(item)
-        webhook_sent = webhook_handler.send_webhook(discord_webhook_url, webhook_data)
-        if webhook_sent:
-            sent_items.append(item)
-        else:
-            with open("unsent_webhooks.txt", "a", encoding="utf8") as unsent_webhooks_file:
-                unsent_webhooks_file.write(json.dumps(webhook_data) + "\n")
+        webhook_handler.send_webhook(discord_webhook_url, webhook_data, webhook_send_delay)
 
         time.sleep(webhook_send_delay)
 
