@@ -10,5 +10,5 @@ def send_webhook(url, data):
         return True
 
     else:
-        error_logger.error_log("Webhook request bad status code: " + str(webhook_request.status_code) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(data), "")
+        error_logger.error_log("Webhook response bad status code: " + str(webhook_request.status_code) + "Response headers: " + str(webhook_request.headers) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(data), "")
         return False
