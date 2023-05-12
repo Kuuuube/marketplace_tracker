@@ -29,19 +29,19 @@ def assemble_webhook(item):
 def assemble_embed_field(item):
     assembled_string = ""
     #auction and buy it now
-    if item["buy_now_price"] != "" and item["price"] != "":
-        assembled_string = "現在 " + item["price"] + "\n" + "即決 " + item["buy_now_price"] + "\n" + "入札 " + item["bidcount"] + "\n" + "残り " + item["time_remaining"]
+    if item["auction"] != "" and item["buy_now"] != "":
+        assembled_string = "現在 " + item["price_red"] + "\n" + "即決 " + item["price"] + "\n" + "入札 " + item["bidcount"] + "\n" + "残り " + item["time_remaining"]
 
     #buy it now only
-    elif item["buy_now_price"] != "" and item["price"] == "":
-        assembled_string = "即決 " + item["buy_now_price"] + "\n" + "入札 " + item["bidcount"] + "\n" + "残り " + item["time_remaining"]
+    elif item["buy_now"] != "" and item["auction"] == "":
+        assembled_string = "即決 " + item["price_red"] + "\n" + "入札 " + item["bidcount"] + "\n" + "残り " + item["time_remaining"]
 
     #auction only
-    elif item["buy_now_price"] == "" and item["price"] != "":
-        assembled_string = "現在 " + item["price"] + "\n" + "入札 " + item["bidcount"] + "\n" + "残り " + item["time_remaining"]
+    elif item["buy_now"] == "" and item["auction"] != "":
+        assembled_string = "現在 " + item["price_red"] + "\n" + "入札 " + item["bidcount"] + "\n" + "残り " + item["time_remaining"]
 
     #unknown, give all potentially relevant params
     else:
-        assembled_string = "現在 " + item["price"] + "\n" + "即決 " + item["buy_now_price"] + "\n" + "入札 " + item["bidcount"] + "\n" + "残り " + item["time_remaining"]
+        assembled_string = "現在 " + item["price_red"] + "\n" + "即決 " + item["price"] + "\n" + "入札 " + item["bidcount"] + "\n" + "残り " + item["time_remaining"]
 
     return assembled_string
