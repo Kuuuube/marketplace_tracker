@@ -13,7 +13,7 @@ def send_webhook(url, data, webhook_send_delay):
         return True
 
     else:
-        error_logger.error_log("Webhook response bad status code: " + str(webhook_request.status_code) + "Response headers: " + str(webhook_request.headers) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(data), "")
+        error_logger.error_log("Webhook response bad status code: " + str(webhook_request.status_code) + ", Response headers: " + str(webhook_request.headers) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(data), "")
         log_unsent(data)
         return False
 
@@ -44,7 +44,7 @@ def resend_unsent(url, webhook_send_delay):
         if webhook_request.status_code in accepted_status_codes:
             unsent_webhooks_json_list.remove(unsent_webhooks_json)
         else:
-            error_logger.error_log("Resend unsent webhook response bad status code: " + str(webhook_request.status_code) + "Response headers: " + str(webhook_request.headers) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(unsent_webhooks_json), "")
+            error_logger.error_log("Resend unsent webhook response bad status code: " + str(webhook_request.status_code) + ", Response headers: " + str(webhook_request.headers) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(unsent_webhooks_json), "")
             break
 
         time.sleep(webhook_send_delay)
