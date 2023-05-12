@@ -38,7 +38,10 @@ def page_parser(request_delay):
             url = try_json("share_url", json_file=listing)
             thumbnail = try_json("images", 0, "url", json_file=listing)
             title = try_json("subject", json_file=listing)
-            price = try_json("price", "value", json_file=listing) + " " + try_json("price", "suffix", json_file=listing)
+            if "price" in listing: #not all blocket listings will have price, this is not an error
+                price = try_json("price", "value", json_file=listing) + " " + try_json("price", "suffix", json_file=listing)
+            else:
+                price = ""
 
             item_info["url"] = url
             item_info["thumbnail"] = thumbnail
