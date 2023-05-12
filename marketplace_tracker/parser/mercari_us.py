@@ -107,5 +107,5 @@ def try_json(*keys, json_file):
             current_json = current_json[key]
         return str(current_json)
     except Exception as e:
-        error_logger.error_log("Mercari US json keys invalid: " + str(keys), e)
+        error_logger.error_log("Mercari US json keys invalid: " + ", json file: " + str(json_file), e)
         return ""
