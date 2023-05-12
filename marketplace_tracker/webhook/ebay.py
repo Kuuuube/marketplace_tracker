@@ -1,5 +1,7 @@
 import re
 from datetime import datetime,timezone
+import config_handler
+import currency_conversion
 
 def assemble_webhook(item):
     utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
@@ -29,6 +31,12 @@ def assemble_webhook(item):
 
 def assemble_embed_field(item):
     assembled_string = ""
+    item["bidding_price"] = convert_currency(item["bidding_price"])
+    item["buy_it_now_price"] = convert_currency(item["buy_it_now_price"])
+    if item["shipping"] != convert_currency(item["shipping"]):
+        item["shipping"] = "+" + convert_currency(item["shipping"]) + " shipping"
+
+
     #auction and buy it now
     if item["buy_it_now_price"] != "" and item["bidding_price"] != "":
         assembled_string = item["bidding_price"] + "\n" + item["bidcount"] + "\n" + item["buy_it_now_price"] + "\n" + item["purchase_option"] + "\n" + item["shipping"]
@@ -53,3 +61,26 @@ def assemble_embed_field(item):
 
 def get_bigger_thumbnail(small_thumbnail_url):
     return re.sub("s-l225", "s-l500",re.sub("thumbs/", "", small_thumbnail_url))
+
+def add_commas(number):
+    try:
+        return format(float(number), ",.2f")
+    except Exception:
+        pass
+
+    return str(number)
+
+def convert_currency(price_string):
+    if price_string == "":
+        return ""
+
+    if config_handler.read("config.cfg", "currency_conversion", "ebay") == "0":
+        return price_string
+    
+    end_currency = config_handler.read("config.cfg", "currency_conversion", "ebay_currency")
+    
+    converted = currency_conversion.currency_string_conversion("", end_currency, price_string, "ebay")
+    if converted == price_string:
+        return price_string
+
+    return add_commas(converted) + " " + end_currency

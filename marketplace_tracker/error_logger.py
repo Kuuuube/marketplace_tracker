@@ -1,6 +1,6 @@
 from datetime import datetime,timezone
 
-def error_log(message,error):
+def error_log(message, error = ""):
     try:
         utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
         with open ("error_log.txt", "a", encoding="utf8") as log_file:
