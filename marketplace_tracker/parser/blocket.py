@@ -30,7 +30,7 @@ def page_parser(request_delay):
         try:
             json_listings = json.loads(page.text)["data"]
         except Exception as e:
-            error_logger.error_log("Blocket json invalid: " + page.text, e)
+            error_logger.error_log("Blocket json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         for listing in json_listings:

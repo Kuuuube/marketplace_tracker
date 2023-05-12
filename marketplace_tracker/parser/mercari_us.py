@@ -73,13 +73,13 @@ def page_parser(request_delay):
         try:
             page = requests.get("https://www.mercari.com/v1/api", params=params, headers=headers)
         except Exception as e:
-            error_logger.error_log("Mercari US request failed", e)
+            error_logger.error_log("Mercari US request failed" + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         try:
             json_listings = json.loads(page.text)["data"]["search"]["itemsList"]
         except Exception as e:
-            error_logger.error_log("Mercari US json invalid: " + page.text, e)
+            error_logger.error_log("Mercari US json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         for listing in json_listings:

@@ -16,7 +16,7 @@ def page_parser(request_delay):
         try:
             page = requests.get(request_url).text
         except Exception as e:
-            error_logger.error_log("eBay request failed", e)
+            error_logger.error_log("eBay request failed" + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         listing_containers = re.findall("<li data-viewport=.*?</div></li>", page)

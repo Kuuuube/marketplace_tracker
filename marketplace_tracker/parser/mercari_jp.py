@@ -27,13 +27,13 @@ def page_parser(request_delay):
         try:
             page = requests.get("https://api.mercari.jp/search_index/search" + url_params, headers=headers)
         except Exception as e:
-            error_logger.error_log("Mercari JP request failed", e)
+            error_logger.error_log("Mercari JP request failed" + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         try:
             json_listings = json.loads(page.text)["data"]
         except Exception as e:
-            error_logger.error_log("Mercari JP json invalid: " + page.text, e)
+            error_logger.error_log("Mercari JP json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         for listing in json_listings:
