@@ -27,16 +27,22 @@ def import_folders(*folders, modules_dict):
                 modules_dict[module_name][folder] = importlib.import_module(folder + "." + module_name)
 
 def listing_check(parser_func, webhook_func, differentiating_key):
-    url_list = parser_func(request_delay)
+    new_listings_list = parser_func(request_delay)
 
-    if len(url_list) < 1:
+    if len(new_listings_list) < 1:
         return
 
     listings_dict = json_handler.read_json_dict(json_file)
     new_items = []
-    for item in url_list:
+    for item in new_listings_list:
         if item[differentiating_key] not in listings_dict:
             new_items.append(item)
+
+    new_listings_bak_file = "new_listings.bak"
+    #new listings should be recoverable if there is a crash while sending webhooks
+    with open(new_listings_bak_file, "w", encoding = "utf8") as new_listings_bak:
+        for item in new_items:
+            new_listings_bak.write(json.dumps(item) + "\n")
 
     json_handler.rewrite_json_dict(json_file, listings_dict, new_items, differentiating_key, 5)
 
@@ -45,6 +51,9 @@ def listing_check(parser_func, webhook_func, differentiating_key):
         webhook_handler.send_webhook(discord_webhook_url, webhook_data, webhook_send_delay)
 
         time.sleep(webhook_send_delay)
+
+    #after webhooks are sent the new_listings.bak is no longer needed
+    os.remove(new_listings_bak_file)
 
 #imports parser and webhook folders to marketplace_modules dict
 import_folders("parser", "webhook", modules_dict=marketplace_modules)
