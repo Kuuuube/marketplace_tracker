@@ -27,7 +27,7 @@ def page_parser(request_delay):
         try:
             page = requests.get("https://api.mercari.jp/search_index/search" + url_params, headers=headers)
         except Exception as e:
-            error_logger.error_log("Mercari JP request failed" + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+            error_logger.error_log("Mercari JP request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
             continue
 
         try:

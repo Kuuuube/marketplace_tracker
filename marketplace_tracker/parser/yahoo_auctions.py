@@ -17,7 +17,7 @@ def page_parser(request_delay):
         try:
             page = requests.get(request_url, headers=headers).text.replace("\n", "").replace("\r", "")
         except Exception as e:
-            error_logger.error_log("Yahoo Auctions request failed" + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+            error_logger.error_log("Yahoo Auctions request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
             continue
 
         listing_containers = re.findall("<li class=\"Product\">.*?</li>", page)

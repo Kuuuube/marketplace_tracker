@@ -24,7 +24,7 @@ def page_parser(request_delay):
         try:
             page = requests.get("https://api.blocket.se/search_bff/v2/content" + url_params, headers=headers)
         except Exception as e:
-            error_logger.error_log("Blocket request failed", e)
+            error_logger.error_log("Blocket request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
             continue
 
         try:

@@ -73,7 +73,7 @@ def page_parser(request_delay):
         try:
             page = requests.get("https://www.mercari.com/v1/api", params=params, headers=headers)
         except Exception as e:
-            error_logger.error_log("Mercari US request failed" + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+            error_logger.error_log("Mercari US request failed. Request url: " + str(request_url), e)
             continue
 
         try:
