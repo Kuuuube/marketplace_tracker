@@ -52,3 +52,16 @@ def resend_unsent(url, webhook_send_delay):
     with open("unsent_webhooks.txt", "w", encoding="utf8") as unsent_webhooks_file:
         for unsent_webhooks_json in unsent_webhooks_json_list:
             unsent_webhooks_file.write(json.dumps(unsent_webhooks_json) + "\n")
+
+def send_unhandled_webhook(url, data):
+    if url == "":
+        return
+
+    try:
+        webhook_request = requests.post(url=url, json=data)
+
+        if webhook_request.status_code not in accepted_status_codes:
+            logger.error_log("Webhook response bad status code: " + str(webhook_request.status_code) + ", Response headers: " + str(webhook_request.headers) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(data), "")
+
+    except Exception as e:
+        logger.error_log("Uptime webhook failed", e)

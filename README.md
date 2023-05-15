@@ -28,6 +28,8 @@ Tracks new listings on online marketplaces and posts to webhooks.
 
 - `discord_webhook_url`: The webhook url to send marketplace listings to.
 
+- `uptime_webhook_url`: The webhook url to send status to every batch and error messages if the main process crashes.
+
 - `webhook_send_delay`: The time to wait between posting to the webhook url.
 
 ## Troubleshooting

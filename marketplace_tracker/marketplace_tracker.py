@@ -10,6 +10,7 @@ import config_handler
 import webhook_handler
 
 discord_webhook_url = config_handler.read("config.cfg", "webhook", "discord_webhook_url")
+uptime_webhook_url = config_handler.read("config.cfg", "webhook", "uptime_webhook_url")
 
 webhook_send_delay = int(config_handler.read("config.cfg", "webhook", "webhook_send_delay"))
 request_delay = int(config_handler.read("config.cfg", "requests", "request_send_delay"))
@@ -71,7 +72,12 @@ while True:
             listing_check(marketplace_module["parser"].page_parser, marketplace_module["webhook"].assemble_webhook, marketplace_module["parser"].get_differentiating_key())
 
         utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
+
         logger.log(utc_time + " Batch complete, waiting: " + str(batch_delay) + " seconds")
+        webhook_handler.send_unhandled_webhook(uptime_webhook_url, data = {"content" : utc_time + " Batch complete"})
+
         time.sleep(batch_delay)
     except Exception:
-        logger.error_log("Crash in main process, attempting to recover.", traceback.format_exc())
+        logger.error_log("Crash in main process, attempting to recover in " + str(batch_delay) + " seconds", traceback.format_exc())
+        webhook_handler.send_unhandled_webhook(uptime_webhook_url, data = {"content" : "Crash in main process, attempting to recover in " + str(batch_delay) + " seconds\n```\n" + str(traceback.format_exc()) + "\n```"})
+        time.sleep(batch_delay)
