@@ -2,7 +2,7 @@ import json
 import re
 import requests
 import time
-import error_logger
+import logger
 import config_handler
 
 def get_differentiating_key():
@@ -24,13 +24,13 @@ def page_parser(request_delay):
         try:
             page = requests.get("https://api.blocket.se/search_bff/v2/content" + url_params, headers=headers)
         except Exception as e:
-            error_logger.error_log("Blocket request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
+            logger.error_log("Blocket request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
             continue
 
         try:
             json_listings = json.loads(page.text)["data"]
         except Exception as e:
-            error_logger.error_log("Blocket json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+            logger.error_log("Blocket json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         for listing in json_listings:
@@ -61,11 +61,11 @@ def try_json(*keys, json_file):
             current_json = current_json[key]
         return str(current_json)
     except Exception as e:
-        error_logger.error_log("Blocket json keys invalid: " + str(keys) + ", json file: " + str(json_file), e)
+        logger.error_log("Blocket json keys invalid: " + str(keys) + ", json file: " + str(json_file), e)
         return ""
 
 def generate_token():
     try:
         return json.loads(requests.get("https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session").text)["bearerToken"]
     except Exception as e:
-        error_logger.error_log("Blocket token generation failed", e)
+        logger.error_log("Blocket token generation failed", e)

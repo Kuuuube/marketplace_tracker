@@ -3,7 +3,7 @@ import os
 import time
 import json
 import traceback
-import error_logger
+import logger
 from datetime import datetime,timezone
 import json_handler
 import config_handler
@@ -63,7 +63,7 @@ import_folders("parser", "webhook", modules_dict=marketplace_modules)
 while True:
     try:
         utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
-        print(utc_time + " Batch started")
+        logger.log(utc_time + " Batch started")
         for marketplace_module in marketplace_modules.values():
             if "parser" not in marketplace_module.keys() or "webhook" not in marketplace_module.keys():
                 continue
@@ -71,7 +71,7 @@ while True:
             listing_check(marketplace_module["parser"].page_parser, marketplace_module["webhook"].assemble_webhook, marketplace_module["parser"].get_differentiating_key())
 
         utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
-        print(utc_time + " Batch complete, waiting: " + str(batch_delay) + " seconds")
+        logger.log(utc_time + " Batch complete, waiting: " + str(batch_delay) + " seconds")
         time.sleep(batch_delay)
     except Exception:
-        error_logger.error_log("Crash in main process, attempting to recover.", traceback.format_exc())
+        logger.error_log("Crash in main process, attempting to recover.", traceback.format_exc())

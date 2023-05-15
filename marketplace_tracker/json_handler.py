@@ -1,5 +1,5 @@
 import json
-import error_logger
+import logger
 import os
 import sys
 
@@ -23,10 +23,10 @@ def rewrite_json_dict(json_file, current_json, list, differentiating_key, retrie
                 break
             else:
                 if current_retry >= retries:
-                    error_logger.error_log("Invalid temp file written: " + str(json_file) + ".tmp, Unrecoverable state detected. Stopping.", "")
+                    logger.error_log("Invalid temp file written: " + str(json_file) + ".tmp, Unrecoverable state detected. Stopping.", "")
                     sys.exit()
                 else:
-                    error_logger.error_log("Invalid temp file written: " + str(json_file) + ".tmp, Retrying " + str(retries) + " times, current retry: " + str(current_retry), "")
+                    logger.error_log("Invalid temp file written: " + str(json_file) + ".tmp, Retrying " + str(retries) + " times, current retry: " + str(current_retry), "")
                 current_retry += 1
         else:
             break
@@ -52,5 +52,5 @@ def validate_json(json_file, expected_data = ""):
             else:
                 return False
     except Exception as e:
-        error_logger.error_log("Failed to validate json file: " + str(json_file), e)
+        logger.error_log("Failed to validate json file: " + str(json_file), e)
         return False

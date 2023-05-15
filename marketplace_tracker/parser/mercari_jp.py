@@ -5,7 +5,7 @@ import uuid
 import re
 import requests
 import time
-import error_logger
+import logger
 import config_handler
 
 def get_differentiating_key():
@@ -27,13 +27,13 @@ def page_parser(request_delay):
         try:
             page = requests.get("https://api.mercari.jp/search_index/search" + url_params, headers=headers)
         except Exception as e:
-            error_logger.error_log("Mercari JP request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
+            logger.error_log("Mercari JP request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
             continue
 
         try:
             json_listings = json.loads(page.text)["data"]
         except Exception as e:
-            error_logger.error_log("Mercari JP json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+            logger.error_log("Mercari JP json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         for listing in json_listings:
@@ -61,7 +61,7 @@ def try_json(*keys, json_file):
             current_json = current_json[key]
         return str(current_json)
     except Exception as e:
-        error_logger.error_log("Mercari JP json keys invalid: " + ", json file: " + str(json_file), e)
+        logger.error_log("Mercari JP json keys invalid: " + ", json file: " + str(json_file), e)
         return ""
 
 #taken from https://github.com/marvinody/mercari/blob/master/mercari/DpopUtils.py with minor modifications

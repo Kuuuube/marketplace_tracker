@@ -1,7 +1,7 @@
 import re
 import requests
 import time
-import error_logger
+import logger
 import html
 import config_handler
 
@@ -16,7 +16,7 @@ def page_parser(request_delay):
         try:
             page = requests.get(request_url).text.replace("\n", "").replace("\r", "")
         except Exception as e:
-            error_logger.error_log("Rakuma request failed. Request url: " + str(request_url), e)
+            logger.error_log("Rakuma request failed. Request url: " + str(request_url), e)
             continue
 
         listing_containers = re.findall("<div class=\"item\">.*?<div class=\"item-box__like_area\">", page)

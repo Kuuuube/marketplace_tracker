@@ -1,7 +1,7 @@
 import re
 import requests
 import time
-import error_logger
+import logger
 import html
 import config_handler
 
@@ -17,7 +17,7 @@ def page_parser(request_delay):
         try:
             page = requests.get(request_url, headers=headers).text.replace("\n", "").replace("\r", "")
         except Exception as e:
-            error_logger.error_log("Yahoo Auctions request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
+            logger.error_log("Yahoo Auctions request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
             continue
 
         listing_containers = re.findall("<li class=\"Product\">.*?</li>", page)

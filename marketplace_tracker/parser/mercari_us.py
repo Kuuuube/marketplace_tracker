@@ -2,7 +2,7 @@ import json
 import re
 import requests
 import time
-import error_logger
+import logger
 import config_handler
 
 def get_differentiating_key():
@@ -53,10 +53,10 @@ def page_parser(request_delay):
                 if raw_url_param_eq_split[0] == "keyword":
                     raw_url_param_eq_split[0] = "query"
                 elif "-" in raw_url_param_eq_split[1]:
-                    print("Unsupported param " + str(raw_url_param_eq_split[0]) + " found, list params are not supported, ignoring param")
+                    logger.log("Unsupported param " + str(raw_url_param_eq_split[0]) + " found, list params are not supported, ignoring param")
                     continue
                 elif raw_url_param_eq_split[0] not in variables["criteria"].keys():
-                    print("Unsupported param " + str(raw_url_param_eq_split[0]) + " found, ignoring param")
+                    logger.log("Unsupported param " + str(raw_url_param_eq_split[0]) + " found, ignoring param")
                     continue
 
                 if raw_url_param_eq_split[1].isdigit():
@@ -73,13 +73,13 @@ def page_parser(request_delay):
         try:
             page = requests.get("https://www.mercari.com/v1/api", params=params, headers=headers)
         except Exception as e:
-            error_logger.error_log("Mercari US request failed. Request url: " + str(request_url), e)
+            logger.error_log("Mercari US request failed. Request url: " + str(request_url), e)
             continue
 
         try:
             json_listings = json.loads(page.text)["data"]["search"]["itemsList"]
         except Exception as e:
-            error_logger.error_log("Mercari US json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+            logger.error_log("Mercari US json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
             continue
 
         for listing in json_listings:
@@ -107,5 +107,5 @@ def try_json(*keys, json_file):
             current_json = current_json[key]
         return str(current_json)
     except Exception as e:
-        error_logger.error_log("Mercari US json keys invalid: " + ", json file: " + str(json_file), e)
+        logger.error_log("Mercari US json keys invalid: " + ", json file: " + str(json_file), e)
         return ""
