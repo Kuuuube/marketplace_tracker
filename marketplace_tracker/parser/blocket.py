@@ -2,6 +2,7 @@ import json
 import re
 import requests
 import time
+import traceback
 import logger
 import config_handler
 
@@ -23,14 +24,14 @@ def page_parser(request_delay):
         headers = {"Authorization": "Bearer " + generate_token()}
         try:
             page = requests.get("https://api.blocket.se/search_bff/v2/content" + url_params, headers=headers)
-        except Exception as e:
-            logger.error_log("Blocket request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
+        except Exception:
+            logger.error_log("Blocket request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), traceback.format_exc())
             continue
 
         try:
             json_listings = json.loads(page.text)["data"]
-        except Exception as e:
-            logger.error_log("Blocket json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+        except Exception:
+            logger.error_log("Blocket json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), traceback.format_exc())
             continue
 
         for listing in json_listings:
@@ -60,12 +61,12 @@ def try_json(*keys, json_file):
         for key in keys:
             current_json = current_json[key]
         return str(current_json)
-    except Exception as e:
-        logger.error_log("Blocket json keys invalid: " + str(keys) + ", json file: " + str(json_file), e)
+    except Exception:
+        logger.error_log("Blocket json keys invalid: " + str(keys) + ", json file: " + str(json_file), traceback.format_exc())
         return ""
 
 def generate_token():
     try:
         return json.loads(requests.get("https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session").text)["bearerToken"]
-    except Exception as e:
-        logger.error_log("Blocket token generation failed", e)
+    except Exception:
+        logger.error_log("Blocket token generation failed", traceback.format_exc())

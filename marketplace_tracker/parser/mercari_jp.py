@@ -5,6 +5,7 @@ import uuid
 import re
 import requests
 import time
+import traceback
 import logger
 import config_handler
 
@@ -26,14 +27,14 @@ def page_parser(request_delay):
         headers = {'DPOP': generate_DPOP(), 'X-Platform': 'web'}
         try:
             page = requests.get("https://api.mercari.jp/search_index/search" + url_params, headers=headers)
-        except Exception as e:
-            logger.error_log("Mercari JP request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
+        except Exception:
+            logger.error_log("Mercari JP request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), traceback.format_exc())
             continue
 
         try:
             json_listings = json.loads(page.text)["data"]
-        except Exception as e:
-            logger.error_log("Mercari JP json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+        except Exception:
+            logger.error_log("Mercari JP json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), traceback.format_exc())
             continue
 
         for listing in json_listings:
@@ -60,8 +61,8 @@ def try_json(*keys, json_file):
         for key in keys:
             current_json = current_json[key]
         return str(current_json)
-    except Exception as e:
-        logger.error_log("Mercari JP json keys invalid: " + ", json file: " + str(json_file), e)
+    except Exception:
+        logger.error_log("Mercari JP json keys invalid: " + ", json file: " + str(json_file), traceback.format_exc())
         return ""
 
 #taken from https://github.com/marvinody/mercari/blob/master/mercari/DpopUtils.py with minor modifications

@@ -2,6 +2,7 @@ import json
 import re
 import requests
 import time
+import traceback
 import logger
 import config_handler
 
@@ -72,14 +73,14 @@ def page_parser(request_delay):
 
         try:
             page = requests.get("https://www.mercari.com/v1/api", params=params, headers=headers)
-        except Exception as e:
-            logger.error_log("Mercari US request failed. Request url: " + str(request_url), e)
+        except Exception:
+            logger.error_log("Mercari US request failed. Request url: " + str(request_url), traceback.format_exc())
             continue
 
         try:
             json_listings = json.loads(page.text)["data"]["search"]["itemsList"]
-        except Exception as e:
-            logger.error_log("Mercari US json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), e)
+        except Exception:
+            logger.error_log("Mercari US json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), traceback.format_exc())
             continue
 
         for listing in json_listings:
@@ -106,6 +107,6 @@ def try_json(*keys, json_file):
         for key in keys:
             current_json = current_json[key]
         return str(current_json)
-    except Exception as e:
-        logger.error_log("Mercari US json keys invalid: " + ", json file: " + str(json_file), e)
+    except Exception:
+        logger.error_log("Mercari US json keys invalid: " + ", json file: " + str(json_file), traceback.format_exc())
         return ""

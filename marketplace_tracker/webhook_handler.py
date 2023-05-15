@@ -2,6 +2,7 @@ import requests
 import logger
 import json
 import time
+import traceback
 
 accepted_status_codes = [200, 204]
 
@@ -31,8 +32,8 @@ def resend_unsent(url, webhook_send_delay):
                     if line == "":
                         continue
                     unsent_webhooks_json_list.append(json.loads(line))
-                except Exception as e:
-                    logger.error_log("Resend Unsent: unsent_webhooks.txt bad line found. Line: " + str(line), e)
+                except Exception:
+                    logger.error_log("Resend Unsent: unsent_webhooks.txt bad line found. Line: " + str(line), traceback.format_exc())
     except Exception:
         return #if unsent_webhooks.txt does not exist there are no unsent webhooks
 
@@ -63,5 +64,5 @@ def send_unhandled_webhook(url, data):
         if webhook_request.status_code not in accepted_status_codes:
             logger.error_log("Webhook response bad status code: " + str(webhook_request.status_code) + ", Response headers: " + str(webhook_request.headers) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(data), "")
 
-    except Exception as e:
-        logger.error_log("Uptime webhook failed", e)
+    except Exception:
+        logger.error_log("Uptime webhook failed", traceback.format_exc())

@@ -3,6 +3,7 @@ import requests
 import time
 import logger
 import html
+import traceback
 import config_handler
 
 def get_differentiating_key():
@@ -16,8 +17,8 @@ def page_parser(request_delay):
         headers = {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0", "Accept-Encoding": "gzip, deflate, br"}
         try:
             page = requests.get(request_url, headers=headers).text.replace("\n", "").replace("\r", "")
-        except Exception as e:
-            logger.error_log("Yahoo Auctions request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), e)
+        except Exception:
+            logger.error_log("Yahoo Auctions request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), traceback.format_exc())
             continue
 
         listing_containers = re.findall("<li class=\"Product\">.*?</li>", page)

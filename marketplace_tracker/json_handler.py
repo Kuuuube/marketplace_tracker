@@ -2,6 +2,7 @@ import json
 import logger
 import os
 import sys
+import traceback
 
 def read_json_dict(json_file):
     with open (json_file, "r") as items:
@@ -51,6 +52,6 @@ def validate_json(json_file, expected_data = ""):
                 return True
             else:
                 return False
-    except Exception as e:
-        logger.error_log("Failed to validate json file: " + str(json_file), e)
+    except Exception:
+        logger.error_log("Failed to validate json file: " + str(json_file), traceback.format_exc())
         return False

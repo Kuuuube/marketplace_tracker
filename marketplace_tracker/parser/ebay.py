@@ -3,6 +3,7 @@ import requests
 import time
 import logger
 import html
+import traceback
 import config_handler
 
 def get_differentiating_key():
@@ -15,8 +16,8 @@ def page_parser(request_delay):
     for request_url in url_request_list:
         try:
             page = requests.get(request_url).text
-        except Exception as e:
-            logger.error_log("eBay request failed. Request url: " + str(request_url), e)
+        except Exception:
+            logger.error_log("eBay request failed. Request url: " + str(request_url), traceback.format_exc())
             continue
 
         listing_containers = re.findall("<li data-viewport=.*?</div></li>", page)
