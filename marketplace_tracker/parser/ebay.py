@@ -24,7 +24,7 @@ def page_parser(request_delay):
         for listing_container in listing_containers:
             item_info = {}
             url = re.findall("(?<=class=s-item__link href=)https://www.ebay.\w+/itm/\d+", listing_container)
-            thumbnail = re.findall("https://i\.ebayimg\.com/thumbs/images/g/.+?/s-l225\.jpg", listing_container)
+            thumbnail = re.findall("https://i\.ebayimg\.com/thumbs/images/g/.+?/s-l\d+\.\w+", listing_container)
             title = re.findall("(?<=alt=\").*?(?=\"></div></a></div>)", listing_container)
             price = re.findall("(?<=<span class=s-item__price>).*?(?=</span></div>)", listing_container)
             shipping = [*re.findall("(?<=<span class=\"s-item__dynamic s-item__freeXDays\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"s-item__shipping s-item__logisticsCost\">).*?(?=</span>)", listing_container)]
