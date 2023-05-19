@@ -20,8 +20,10 @@ def page_parser(request_delay):
             url_params = raw_url_params[0]
         else:
             continue
-
-        headers = {"Authorization": "Bearer " + generate_token()}
+        token = generate_token()
+        if token == None:
+            continue
+        headers = {"Authorization": "Bearer " + token}
         try:
             page = requests.get("https://api.blocket.se/search_bff/v2/content" + url_params, headers=headers)
         except Exception:
