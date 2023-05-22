@@ -16,7 +16,7 @@ def page_parser(request_delay):
     for request_url in url_request_list:
         headers = {"User-Agent": "Mercari_w/1 (Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0)"}
         params = {"operationName": "searchFacetQuery"}
-        extensions = {"persistedQuery":{"version":1, "sha256Hash":"5b7b667eaf8a796406058428fa5df18e7cecd5229702ee0753a091d980884d38"}}
+        extensions = {"persistedQuery":{"version":1, "sha256Hash":"548bdeeed850fc14e99b43e9dff1d7b257a273681011b6f5c661f6ba8965c12e"}}
         variables = {
             "criteria": {
                 "offset": 0,
