@@ -25,7 +25,7 @@ def page_parser(request_delay):
             item_info = {}
             url = re.findall("(?<=href=\")/item/.*?(?=\">)", listing_container)
             thumbnail = re.findall("(?<=<img loading=\"lazy\" src=\").*?(?=\")", listing_container)
-            title = re.findall("(?<=<a title=\").*?(?=\")", listing_container)
+            title = [*re.findall("(?<=<a title=\").*?(?=\")", listing_container), *re.findall("(?<=<a title=\').*?(?=\')", listing_container)]
             price = re.findall("(?<=<span class=\"text-nowrap font-weight-bold font-hansen\" data-testid=\"price\">).*?(?=</span>)", listing_container)
             buy_it_now_price = re.findall("(?<=<span class=\"text-nowrap text-inter-light\" data-testid=\"bin-price\">).*?(?=</span>)", listing_container)
             buy_it_now_label = re.findall("(?<=<span data-testid=\"fixedPriceLabel\" class=\"text-nowrap\">).*?(?=</span>)", listing_container)
