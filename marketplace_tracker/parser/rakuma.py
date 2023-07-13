@@ -24,17 +24,17 @@ def page_parser(request_delay):
         for listing_container in listing_containers:
             item_info = {}
             url = re.findall("(?<=<a href=\")https://item.fril.jp/\w+", listing_container)
-            thumbnail = re.findall("(?<=<meta itemprop=\"image\" content=\").*?(?=\">)", listing_container)
-            title = re.findall("(?<=<span itemprop=\"name\">).*?(?=</span>)", listing_container)
-            price = re.findall("(?<=<span itemprop=\"price\" data-content=\").*?(?=\">)", listing_container)
+            thumbnail = re.findall("(?<=<img src=\").*?(?=\")", listing_container)
+            title = re.findall("(?<=class=\"link_search_title\" title=\").*?(?=\" onclick)", listing_container)
+            price = re.findall("(?<=<p class=\"item-box__item-price\"><span data-content=\"JPY\">¥</span><span data-content=\").*?(?=\")", listing_container)
 
             if len(url) > 0:
                 item_info["url"] = strip_excess_html(url[0])
             else:
                 continue
 
-            if len(thumbnail) > 0:
-                item_info["thumbnail"] = strip_excess_html(thumbnail[0])
+            if len(thumbnail) > 1:
+                item_info["thumbnail"] = strip_excess_html(thumbnail[1])
             else:
                 item_info["thumbnail"] = ""
 
