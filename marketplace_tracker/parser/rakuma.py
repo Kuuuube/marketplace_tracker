@@ -20,7 +20,7 @@ def page_parser(request_delay):
             logger.error_log("Rakuma request failed. Request url: " + str(request_url), traceback.format_exc())
             continue
 
-        listing_containers = re.findall("<div class=\"item\">.*?<script>", page)
+        listing_containers = re.findall("<div class=\"item\">.*?class=\"price-status__price--off\">", page)
         for listing_container in listing_containers:
             item_info = {}
             url = re.findall("(?<=<a href=\")https://item.fril.jp/\w+", listing_container)
