@@ -24,15 +24,50 @@ def page_parser(request_delay):
         else:
             continue
 
-        headers = {'DPOP': generate_DPOP(), 'X-Platform': 'web'}
+        rand_uuid = generate_uuid()
+        headers = {'DPOP': generate_DPOP(rand_uuid), 'X-Platform': 'web', 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0'}
+
+        data = {
+            "userId": headers["User-Agent"] + "_" + rand_uuid,
+            "pageSize": 120,
+            "pageToken": "v1:1",
+            "searchSessionId": headers["User-Agent"] + "_" + rand_uuid,
+            "indexRouting": "INDEX_ROUTING_UNSPECIFIED",
+            "searchCondition": {"status": ["STATUS_DEFAULT"]},
+            "defaultDatasets": ["DATASET_TYPE_MERCARI", "DATASET_TYPE_BEYOND"]
+            }
+
+        raw_url_params = re.findall("(?<=\?).*", request_url)
+        if len(raw_url_params) > 0:
+            for raw_url_param in raw_url_params[0].split("&"):
+                raw_url_param_eq_split = raw_url_param.split("=")
+
+                if raw_url_param_eq_split[0] == "keyword":
+                    data["searchCondition"]["keyword"] = raw_url_param_eq_split[1]
+                elif raw_url_param_eq_split[0] == "sort":
+                    sorts = {"default": "SORT_DEFAULT", "created_time": "SORT_CREATED_TIME", "num_likes": "SORT_NUM_LIKES", "score": "SORT_SCORE", "price": "SORT_PRICE"}
+                    data["searchCondition"]["sort"] = sorts[raw_url_param_eq_split[1]]
+                elif raw_url_param_eq_split[0] == "order":
+                    orders = {"desc": "ORDER_DESC", "asc": "ORDER_ASC"}
+                    data["searchCondition"]["order"] = orders[raw_url_param_eq_split[1]]
+                elif raw_url_param_eq_split[0] == "status":
+                    statuses = {"default": "STATUS_DEFAULT", "on_sale": "STATUS_ON_SALE", "sold_out": "STATUS_SOLD_OUT"}
+                    data["searchCondition"]["status"] = [statuses[raw_url_param_eq_split[1]]]
+
+            data["searchCondition"]["excludeKeyword"] = ""
+        else:
+            continue
+
+        request_url = request_url.split("?")[0]
+
         try:
-            page = requests.get("https://api.mercari.jp/search_index/search" + url_params, headers=headers)
+            page = requests.post("https://api.mercari.jp/v2/entities:search", headers=headers, data=json.dumps(data))
         except Exception:
             logger.error_log("Mercari JP request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), traceback.format_exc())
             continue
 
         try:
-            json_listings = json.loads(page.text)["data"]
+            json_listings = json.loads(page.text)["items"]
         except Exception:
             logger.error_log("Mercari JP json invalid: " + page.text + ", Status code: " + str(page.status_code) + ", Headers: " + str(page.headers), traceback.format_exc())
             continue
@@ -87,15 +122,17 @@ def public_key_to_JWK(public_key):
 def public_key_to_Header(public_key):
     return {"typ": "dpop+jwt", "alg": "ES256", "jwk": public_key_to_JWK(public_key)}
 
-def generate_DPOP():
+def generate_uuid():
+    return str(uuid.uuid4())
+
+def generate_DPOP(dpop_uuid):
     #mercari specific settings
-    rand_uuid = str(uuid.uuid4())
-    method = "GET"
-    url = "https://api.mercari.jp/search_index/search"
+    method = "POST"
+    url = "https://api.mercari.jp/v2/entities:search"
 
     private_key = cryptography.hazmat.primitives.asymmetric.ec.generate_private_key(cryptography.hazmat.primitives.asymmetric.ec.SECP256R1())
 
-    payload = {"iat": int(time.time()), "jti": rand_uuid, "htu": url, "htm": method.upper()}
+    payload = {"iat": int(time.time()), "jti": dpop_uuid, "htu": url, "htm": method.upper()}
 
     public_key = private_key.public_key()
 
