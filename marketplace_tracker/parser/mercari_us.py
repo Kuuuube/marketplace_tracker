@@ -112,5 +112,9 @@ def try_json(*keys, json_file):
         return ""
 
 def generateAccessToken():
-    request_token = requests.get("https://www.mercari.com/v1/initialize", headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0"})
-    return request_token.json()["accessToken"]
+    try:
+        request_token = requests.get("https://www.mercari.com/v1/initialize", headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0"})
+        return request_token.json()["accessToken"]
+    except Exception:
+        logger.error_log("Mercari US access token generation failed", traceback.format_exc())
+        return ""
