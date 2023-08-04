@@ -14,9 +14,9 @@ def page_parser(request_delay):
 
     item_info_list = []
     for request_url in url_request_list:
-        headers = {"User-Agent": "Mercari_w/1 (Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0)"}
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0", "content-type": "application/json","authorization": "Bearer " + generateAccessToken()}
         params = {"operationName": "searchFacetQuery"}
-        extensions = {"persistedQuery":{"version":1, "sha256Hash":"548bdeeed850fc14e99b43e9dff1d7b257a273681011b6f5c661f6ba8965c12e"}}
+        extensions = {"persistedQuery":{"version":1, "sha256Hash":"fdd28902469c1a04084b852708ecd84ab7428d68fb52f4f416545cacedb60c8a"}}
         variables = {
             "criteria": {
                 "offset": 0,
@@ -110,3 +110,7 @@ def try_json(*keys, json_file):
     except Exception:
         logger.error_log("Mercari US json keys invalid: " + ", json file: " + str(json_file), traceback.format_exc())
         return ""
+
+def generateAccessToken():
+    request_token = requests.get("https://www.mercari.com/v1/initialize", headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0"})
+    return request_token.json()["accessToken"]
