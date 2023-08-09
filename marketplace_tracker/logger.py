@@ -9,8 +9,8 @@ def error_log(message, error = ""):
         print(message)
         print(error)
     except Exception:
-        print("Could not write to error log:")
-        print(traceback.format_exc())
+        try_print("Could not write to error log:")
+        try_print(traceback.format_exc())
 
 def log(message):
     try:
@@ -19,5 +19,11 @@ def log(message):
             log_file.write(utc_time + ", " + str(message).replace("\r", r"\r").replace("\n", r"\n") + "\n")
         print(message)
     except Exception:
-        print("Could not write to log:")
-        print(traceback.format_exc())
+        try_print("Could not write to log:")
+        try_print(traceback.format_exc())
+
+def try_print(input_string):
+    try:
+        print(input_string)
+    except Exception:
+        pass
