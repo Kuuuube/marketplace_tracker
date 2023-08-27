@@ -78,6 +78,9 @@ while True:
 
         time.sleep(batch_delay)
     except Exception:
-        logger.error_log("Crash in main process, attempting to recover in " + str(batch_delay) + " seconds", traceback.format_exc())
-        webhook_handler.send_unhandled_webhook(uptime_webhook_url, data = {"content": "","embeds": [{"title": "Crash in main process","description": "Attempting to recover in " + str(batch_delay) + " seconds\n```\n" + str(traceback.format_exc()) + "\n```"}]})
-        time.sleep(batch_delay)
+        try:
+            logger.error_log("Crash in main process, attempting to recover in " + str(batch_delay) + " seconds", traceback.format_exc())
+            webhook_handler.send_unhandled_webhook(uptime_webhook_url, data = {"content": "","embeds": [{"title": "Crash in main process","description": "Attempting to recover in " + str(batch_delay) + " seconds\n```\n" + str(traceback.format_exc()) + "\n```"}]})
+            time.sleep(batch_delay)
+        except Exception:
+            pass

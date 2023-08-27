@@ -55,10 +55,10 @@ def resend_unsent(url, webhook_send_delay):
             unsent_webhooks_file.write(json.dumps(unsent_webhooks_json) + "\n")
 
 def send_unhandled_webhook(url, data):
-    if url == "":
-        return
-
     try:
+        if url == "":
+            return
+
         webhook_request = requests.post(url=url, json=data)
 
         if webhook_request.status_code not in accepted_status_codes:
