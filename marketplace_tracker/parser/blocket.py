@@ -39,7 +39,7 @@ def page_parser(request_delay):
         for listing in json_listings:
             item_info = {}
             url = try_json("share_url", json_file=listing)
-            thumbnail = try_json("images", 0, "url", json_file=listing)
+            thumbnail = try_json_unhandled("images", 0, "url", json_file=listing) #thumbnail is not required for blocket listings, failure to find a thumbnail should not log an error
             title = try_json("subject", json_file=listing)
             if "price" in listing: #not all blocket listings will have price, this is not an error
                 price = try_json("price", "value", json_file=listing) + " " + try_json("price", "suffix", json_file=listing)
@@ -65,6 +65,15 @@ def try_json(*keys, json_file):
         return str(current_json)
     except Exception:
         logger.error_log("Blocket json keys invalid: " + str(keys) + ", json file: " + str(json_file), traceback.format_exc())
+        return ""
+
+def try_json_unhandled(*keys, json_file):
+    try:
+        current_json = json_file
+        for key in keys:
+            current_json = current_json[key]
+        return str(current_json)
+    except Exception:
         return ""
 
 def generate_token():
