@@ -62,6 +62,7 @@ def listing_check(parser_func, webhook_func, differentiating_key):
 import_folders("parser", "webhook", modules_dict=marketplace_modules)
 
 #send bot started notification to uptime webhook
+utc_time = datetime.now(timezone.utc).strftime("%Y-%m-%d_%H-%M-%S")
 webhook_handler.send_unhandled_webhook(uptime_webhook_url, data = {"content": "","embeds": [{"title": "Bot started","description": utc_time}]})
 
 while True:
