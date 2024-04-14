@@ -30,7 +30,7 @@ def page_parser(request_delay):
         data = {
             "userId": headers["User-Agent"] + "_" + rand_uuid,
             "pageSize": 120,
-            "pageToken": "v1:1",
+            "pageToken": "",
             "searchSessionId": headers["User-Agent"] + "_" + rand_uuid,
             "indexRouting": "INDEX_ROUTING_UNSPECIFIED",
             "searchCondition": {"status": ["STATUS_DEFAULT"]},
