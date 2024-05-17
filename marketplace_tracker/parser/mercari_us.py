@@ -16,7 +16,7 @@ def page_parser(request_delay):
     for request_url in url_request_list:
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0", "content-type": "application/json","authorization": "Bearer " + generate_access_token()}
         params = {"operationName": "searchFacetQuery"}
-        extensions = {"persistedQuery":{"version":1, "sha256Hash":"8bd533a5fa32bcc8ca81bc09253af7a3f93fbcf51db35df4716ebdd1ef2123ec"}}
+        extensions = {"persistedQuery":{"version":1, "sha256Hash":"2fd981e6c4573c3b9a63aedfc106c09f27f6800fa7117920f1f04a42c1f2a7f9"}}
         variables = {
             "criteria": {
                 "offset": 0,
