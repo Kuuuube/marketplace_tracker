@@ -3,6 +3,7 @@ import re
 import requests
 import time
 import traceback
+import hashlib
 import logger
 import config_handler
 
@@ -16,7 +17,7 @@ def page_parser(request_delay):
     for request_url in url_request_list:
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0", "content-type": "application/json","authorization": "Bearer " + generate_access_token()}
         params = {"operationName": "searchFacetQuery"}
-        extensions = {"persistedQuery":{"version":1, "sha256Hash":"2fd981e6c4573c3b9a63aedfc106c09f27f6800fa7117920f1f04a42c1f2a7f9"}}
+        extensions = {"persistedQuery": {"version": 1, "sha256Hash": get_hash(), "query": get_query()}}
         variables = {
             "criteria": {
                 "offset": 0,
@@ -118,3 +119,11 @@ def generate_access_token():
     except Exception:
         logger.error_log("Mercari US access token generation failed", traceback.format_exc())
         return ""
+
+#taken from https://github.com/marvinody/mercarius/commit/e08c227ff07e80ff1cb52ec46a4dd8e9534b7be6
+def get_query():
+    return "query searchFacetQuery($criteria: SearchInput!) { search(criteria: $criteria) { ...SearchFacetResponseFragment __typename }}fragment SearchFacetResponseFragment on SearchResponse { relatedCityPageLinks { title path __typename } pageTitle localeTitle page { offset soldItemsOffset promotedItemsOffset __typename } count nextKey searchId parsedQuery metadata { queryAfterRemoval __typename } initRequestTime itemsList { ...ItemListDetailsFragment __typename } criteria { ...CriteriaFragment __typename } ...FacetGroupsListFragment ...FeaturedFilterGroupsListFragment __typename}fragment ItemListDetailsFragment on Item { id name status description originalPrice shippingPayer { id name code __typename } itemCategoryHierarchy { id level name __typename } photos { imageUrl thumbnail __typename } seller { id sellerId: id photo __typename } price itemDecoration { id imageUrl __typename } itemDecorationCircle { icon __typename } itemDecorationRectangle { textColor backgroundColor icon text __typename } brand { id name __typename } itemSize { id name __typename } itemCondition { id name __typename } itemCategory { id name __typename } customFacetsList { facetName value __typename } isAuthenticLux promoteType promoteExpireTime me { isItemLiked userId __typename } localShippingPartnerZonesList isLocalPurchaseEligible pagerId authenticItemStatus { status __typename } localDeliveryPartnerIds categoryTitle categoryId __typename}fragment CriteriaFragment on SearchCriteria { query sortBy categoryIds colorIds brandIds itemStatuses itemConditions shippingPayerIds sizeGroupIds sizeIds maxPrice minPrice authenticities skuIds customFacets { facetTitle facetValuesList __typename } deliveryType withCouponOnly excludeShippingTypes __typename}fragment FacetGroupsListFragment on SearchResponse { facetGroupsList { displayTitle systemName facetType facetsList { title popularity criteria { categoryIds brandIds itemStatuses itemConditions shippingPayerIds sizeGroupIds sizeIds customFacets { facetTitle facetValuesList __typename } authenticities localShippingPartnerZones colorIds __typename } __typename } __typename } __typename}fragment FeaturedFilterGroupsListFragment on SearchResponse { featuredFilterGroupsList { displayTitle facetType featuredFiltersList { title subtitle criteria { categoryIds brandIds itemStatuses itemConditions shippingPayerIds sizeGroupIds sizeIds customFacets { facetTitle facetValuesList __typename } authenticities localShippingPartnerZones colorIds __typename } __typename } systemName __typename } __typename}"
+
+def get_hash():
+    graph_ql_hash = hashlib.sha256(get_query().encode('utf-8')).hexdigest()
+    return graph_ql_hash
