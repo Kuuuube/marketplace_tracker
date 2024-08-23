@@ -12,7 +12,7 @@ import config_handler
 def get_differentiating_key():
     return "url"
 
-def page_parser(request_delay):
+def page_parser(request_delay, request_timeout):
     url_request_list = config_handler.read("urls.cfg", "mercari_jp", delimiters=["\n"])
 
     item_info_list = []
@@ -61,7 +61,7 @@ def page_parser(request_delay):
         request_url = request_url.split("?")[0]
 
         try:
-            page = requests.post("https://api.mercari.jp/v2/entities:search", headers=headers, data=json.dumps(data))
+            page = requests.post("https://api.mercari.jp/v2/entities:search", headers=headers, data=json.dumps(data), timeout=request_timeout)
         except Exception:
             logger.error_log("Mercari JP request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), traceback.format_exc())
             continue

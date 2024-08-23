@@ -9,7 +9,7 @@ import config_handler
 def get_differentiating_key():
     return "url"
 
-def page_parser(request_delay):
+def page_parser(request_delay, request_timeout):
     url_request_list = config_handler.read("urls.cfg", "blocket", delimiters=["\n"])
 
     item_info_list = []
@@ -20,12 +20,12 @@ def page_parser(request_delay):
             url_params = raw_url_params[0]
         else:
             continue
-        token = generate_token()
+        token = generate_token(request_timeout)
         if token == None:
             continue
         headers = {"Authorization": "Bearer " + token}
         try:
-            page = requests.get("https://api.blocket.se/search_bff/v2/content" + url_params, headers=headers)
+            page = requests.get("https://api.blocket.se/search_bff/v2/content" + url_params, headers=headers, timeout=request_timeout)
         except Exception:
             logger.error_log("Blocket request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), traceback.format_exc())
             continue
@@ -76,8 +76,8 @@ def try_json_unhandled(*keys, json_file):
     except Exception:
         return ""
 
-def generate_token():
+def generate_token(request_timeout):
     try:
-        return json.loads(requests.get("https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session").text)["bearerToken"]
+        return json.loads(requests.get("https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session").text, timeout=request_timeout)["bearerToken"]
     except Exception:
         logger.error_log("Blocket token generation failed", traceback.format_exc())

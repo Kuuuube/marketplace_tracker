@@ -9,13 +9,13 @@ import config_handler
 def get_differentiating_key():
     return "url"
 
-def page_parser(request_delay):
+def page_parser(request_delay, request_timeout):
     url_request_list = config_handler.read("urls.cfg", "ebay", delimiters=["\n"])
 
     item_info_list = []
     for request_url in url_request_list:
         try:
-            page = requests.get(request_url).text
+            page = requests.get(request_url, timeout=request_timeout).text
         except Exception:
             logger.error_log("eBay request failed. Request url: " + str(request_url), traceback.format_exc())
             continue

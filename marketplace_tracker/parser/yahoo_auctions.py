@@ -9,14 +9,14 @@ import config_handler
 def get_differentiating_key():
     return "url"
 
-def page_parser(request_delay):
+def page_parser(request_delay, request_timeout):
     url_request_list = config_handler.read("urls.cfg", "yahoo_auctions", delimiters=["\n"])
 
     item_info_list = []
     for request_url in url_request_list:
         headers = {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0", "Accept-Encoding": "gzip, deflate, br"}
         try:
-            page = requests.get(request_url, headers=headers).text.replace("\n", "").replace("\r", "")
+            page = requests.get(request_url, headers=headers, timeout=request_timeout).text.replace("\n", "").replace("\r", "")
         except Exception:
             logger.error_log("Yahoo Auctions request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), traceback.format_exc())
             continue

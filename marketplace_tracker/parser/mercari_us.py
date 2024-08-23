@@ -10,12 +10,12 @@ import config_handler
 def get_differentiating_key():
     return "url"
 
-def page_parser(request_delay):
+def page_parser(request_delay, request_timeout):
     url_request_list = config_handler.read("urls.cfg", "mercari_us", delimiters=["\n"])
 
     item_info_list = []
     for request_url in url_request_list:
-        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0", "content-type": "application/json","authorization": "Bearer " + generate_access_token()}
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0", "content-type": "application/json","authorization": "Bearer " + generate_access_token(request_timeout)}
         params = {"operationName": "searchFacetQuery"}
         extensions = {"persistedQuery": {"version": 1, "sha256Hash": get_hash(), "query": get_query()}}
         variables = {
@@ -73,7 +73,7 @@ def page_parser(request_delay):
             continue
 
         try:
-            page = requests.get("https://www.mercari.com/v1/api", params=params, headers=headers)
+            page = requests.get("https://www.mercari.com/v1/api", params=params, headers=headers, timeout=request_timeout)
         except Exception:
             logger.error_log("Mercari US request failed. Request url: " + str(request_url), traceback.format_exc())
             continue
@@ -112,9 +112,9 @@ def try_json(*keys, json_file):
         logger.error_log("Mercari US json keys invalid: " + ", json file: " + str(json_file), traceback.format_exc())
         return ""
 
-def generate_access_token():
+def generate_access_token(request_timeout):
     try:
-        request_token = requests.get("https://www.mercari.com/v1/initialize", headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0"})
+        request_token = requests.get("https://www.mercari.com/v1/initialize", headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:115.0) Gecko/20100101 Firefox/115.0"}, timeout=request_timeout)
         return request_token.json()["accessToken"]
     except Exception:
         logger.error_log("Mercari US access token generation failed", traceback.format_exc())

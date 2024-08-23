@@ -6,11 +6,11 @@ import traceback
 
 accepted_status_codes = [200, 204]
 
-def send_webhook(url, data, webhook_send_delay):
-    webhook_request = requests.post(url=url, json=data)
+def send_webhook(url, data, webhook_send_delay, request_timeout):
+    webhook_request = requests.post(url=url, json=data, timeout=request_timeout)
 
     if webhook_request.status_code in accepted_status_codes:
-        resend_unsent(url, webhook_send_delay)
+        resend_unsent(url, webhook_send_delay, request_timeout)
         return True
 
     else:
@@ -22,7 +22,7 @@ def log_unsent(data):
     with open("unsent_webhooks.txt", "a", encoding="utf8") as unsent_webhooks_file:
         unsent_webhooks_file.write(json.dumps(data) + "\n")
 
-def resend_unsent(url, webhook_send_delay):
+def resend_unsent(url, webhook_send_delay, request_timeout):
     unsent_webhooks_json_list = []
     try:
         with open("unsent_webhooks.txt", "r", encoding="utf8") as unsent_webhooks_file:
@@ -40,7 +40,7 @@ def resend_unsent(url, webhook_send_delay):
     for unsent_webhooks_json in unsent_webhooks_json_list.copy():
         time.sleep(webhook_send_delay)
 
-        webhook_request = requests.post(url=url, json=unsent_webhooks_json)
+        webhook_request = requests.post(url=url, json=unsent_webhooks_json, timeout=request_timeout)
 
         if webhook_request.status_code in accepted_status_codes:
             unsent_webhooks_json_list.remove(unsent_webhooks_json)
@@ -54,12 +54,12 @@ def resend_unsent(url, webhook_send_delay):
         for unsent_webhooks_json in unsent_webhooks_json_list:
             unsent_webhooks_file.write(json.dumps(unsent_webhooks_json) + "\n")
 
-def send_unhandled_webhook(url, data):
+def send_unhandled_webhook(url, request_timeout, data):
     try:
         if url == "":
             return
 
-        webhook_request = requests.post(url=url, json=data)
+        webhook_request = requests.post(url=url, json=data, timeout=request_timeout)
 
         if webhook_request.status_code not in accepted_status_codes:
             logger.error_log("Webhook response bad status code: " + str(webhook_request.status_code) + ", Response headers: " + str(webhook_request.headers) + ", Request response: " + str(webhook_request.text) + ", Webhook data: " + str(data), "")
