@@ -53,7 +53,7 @@ def listing_check(parser_func, webhook_func, differentiating_key):
 
     for item in new_items:
         webhook_data = webhook_func(item)
-        webhook_handler.send_webhook(discord_webhook_url, webhook_data, webhook_send_delay, request_timeout, request_timeout)
+        webhook_handler.send_webhook(discord_webhook_url, webhook_data, webhook_send_delay, request_timeout)
 
         time.sleep(webhook_send_delay)
 
