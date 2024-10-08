@@ -14,7 +14,7 @@ def page_parser(request_delay, request_timeout):
 
     item_info_list = []
     for request_url in url_request_list:
-        raw_url_params = re.findall("\?.*", request_url)
+        raw_url_params = re.findall(r"\?.*", request_url)
         url_params = ""
         if len(raw_url_params) > 0:
             url_params = raw_url_params[0]

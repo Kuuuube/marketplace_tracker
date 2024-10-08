@@ -1,4 +1,6 @@
-import cryptography.hazmat.primitives.asymmetric.ec, cryptography.hazmat.primitives.asymmetric.utils, cryptography.hazmat.primitives.hashes
+import cryptography.hazmat.primitives.asymmetric.ec
+import cryptography.hazmat.primitives.asymmetric.utils
+import cryptography.hazmat.primitives.hashes
 import base64
 import json
 import uuid
@@ -17,7 +19,7 @@ def page_parser(request_delay, request_timeout):
 
     item_info_list = []
     for request_url in url_request_list:
-        raw_url_params = re.findall("\?.*", request_url)
+        raw_url_params = re.findall(r"\?.*", request_url)
         url_params = ""
         if len(raw_url_params) > 0:
             url_params = raw_url_params[0]
@@ -37,7 +39,7 @@ def page_parser(request_delay, request_timeout):
             "defaultDatasets": ["DATASET_TYPE_MERCARI", "DATASET_TYPE_BEYOND"]
             }
 
-        raw_url_params = re.findall("(?<=\?).*", request_url)
+        raw_url_params = re.findall(r"(?<=\?).*", request_url)
         if len(raw_url_params) > 0:
             for raw_url_param in raw_url_params[0].split("&"):
                 raw_url_param_eq_split = raw_url_param.split("=")

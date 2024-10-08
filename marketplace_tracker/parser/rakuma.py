@@ -20,13 +20,13 @@ def page_parser(request_delay, request_timeout):
             logger.error_log("Rakuma request failed. Request url: " + str(request_url), traceback.format_exc())
             continue
 
-        listing_containers = re.findall("<div class=\"item\">.*?class=\"like_item_off\">", page)
+        listing_containers = re.findall(r"<div class=\"item\">.*?class=\"like_item_off\">", page)
         for listing_container in listing_containers:
             item_info = {}
-            url = re.findall("(?<=<a href=\")https://item.fril.jp/\w+", listing_container)
-            thumbnail = re.findall("(?<=<img src=\").*?(?=\")", listing_container)
-            title = re.findall("(?<=class=\"link_search_title\" title=\").*?(?=\" onclick)", listing_container)
-            price = re.findall("(?<=<p class=\"item-box__item-price\"><span data-content=\"JPY\">¥</span><span data-content=\").*?(?=\")", listing_container)
+            url = re.findall(r"(?<=<a href=\")https://item.fril.jp/\w+", listing_container)
+            thumbnail = re.findall(r"(?<=<img src=\").*?(?=\")", listing_container)
+            title = re.findall(r"(?<=class=\"link_search_title\" title=\").*?(?=\" onclick)", listing_container)
+            price = re.findall(r"(?<=<p class=\"item-box__item-price\"><span data-content=\"JPY\">¥</span><span data-content=\").*?(?=\")", listing_container)
 
             if len(url) > 0:
                 item_info["url"] = strip_excess_html(url[0])
@@ -55,4 +55,4 @@ def page_parser(request_delay, request_timeout):
     return item_info_list
 
 def strip_excess_html(string):
-    return html.unescape(re.sub("<.*?>", "", string))
+    return html.unescape(re.sub(r"<.*?>", "", string))

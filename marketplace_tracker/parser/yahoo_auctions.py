@@ -21,18 +21,18 @@ def page_parser(request_delay, request_timeout):
             logger.error_log("Yahoo Auctions request failed. Request url: " + str(request_url) + ", Request headers: " + str(headers), traceback.format_exc())
             continue
 
-        listing_containers = re.findall("<li class=\"Product\">.*?</li>", page)
+        listing_containers = re.findall(r"<li class=\"Product\">.*?</li>", page)
         for listing_container in listing_containers:
             item_info = {}
-            url = re.findall("(?<=href=\")https://page.auctions.yahoo.co.jp/jp/auction/.*?(?=\")", listing_container)
-            thumbnail = re.findall("(?<=data-auction-img=\").*?(?=\")", listing_container)
-            title = [*re.findall("(?<=data-auction-title=\").*?(?=\")", listing_container), *re.findall("(?<=data-auction-title=\').*?(?=\')", listing_container)]
-            auction = re.findall("<span class=\"Product__label\">現在</span>", listing_container)
-            buy_now = re.findall("<span class=\"Product__label\">即決</span>", listing_container)
-            price_red = re.findall("(?<=<span class=\"Product__priceValue u-textRed\">).*?(?=</span>)", listing_container)
-            price = re.findall("(?<=<span class=\"Product__priceValue\">).*?(?=</span>)", listing_container)
-            bidcount = re.findall("(?<=<span class=\"Product__bid\">).*?(?=</span>)", listing_container)
-            time_remaining = re.findall("(?<=<span class=\"Product__time\">).*?(?=</span>)", listing_container)
+            url = re.findall(r"(?<=href=\")https://page.auctions.yahoo.co.jp/jp/auction/.*?(?=\")", listing_container)
+            thumbnail = re.findall(r"(?<=data-auction-img=\").*?(?=\")", listing_container)
+            title = [*re.findall(r"(?<=data-auction-title=\").*?(?=\")", listing_container), *re.findall(r"(?<=data-auction-title=\').*?(?=\')", listing_container)]
+            auction = re.findall(r"<span class=\"Product__label\">現在</span>", listing_container)
+            buy_now = re.findall(r"<span class=\"Product__label\">即決</span>", listing_container)
+            price_red = re.findall(r"(?<=<span class=\"Product__priceValue u-textRed\">).*?(?=</span>)", listing_container)
+            price = re.findall(r"(?<=<span class=\"Product__priceValue\">).*?(?=</span>)", listing_container)
+            bidcount = re.findall(r"(?<=<span class=\"Product__bid\">).*?(?=</span>)", listing_container)
+            time_remaining = re.findall(r"(?<=<span class=\"Product__time\">).*?(?=</span>)", listing_container)
 
             if len(url) > 0:
                 item_info["url"] = strip_excess_html(url[0])
@@ -86,4 +86,4 @@ def page_parser(request_delay, request_timeout):
     return item_info_list
 
 def strip_excess_html(string):
-    return html.unescape(re.sub("<.*?>", "", string))
+    return html.unescape(re.sub(r"<.*?>", "", string))

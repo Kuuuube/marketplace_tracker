@@ -20,16 +20,16 @@ def page_parser(request_delay, request_timeout):
             logger.error_log("eBay request failed. Request url: " + str(request_url), traceback.format_exc())
             continue
 
-        listing_containers = re.findall("<li data-viewport=.*?</div></li>", page)
+        listing_containers = re.findall(r"<li data-viewport=.*?</div></li>", page)
         for listing_container in listing_containers:
             item_info = {}
-            url = re.findall("(?<=class=s-item__link href=)https://www.ebay.\w+/itm/\d+", listing_container)
-            thumbnail = re.findall("https://i\.ebayimg\.com/thumbs/images/g/.+?/s-l\d+\.\w+", listing_container)
-            title = [*re.findall("(?<=alt=\").*?(?=\"></div></a></div>)", listing_container), *re.findall("(?<=alt=\').*?(?=\'></div></a></div>)", listing_container)]
-            price = re.findall("(?<=<span class=s-item__price>).*?(?=</span></div>)", listing_container)
-            shipping = [*re.findall("(?<=<span class=\"s-item__dynamic s-item__freeXDays\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"s-item__shipping s-item__logisticsCost\">).*?(?=</span>)", listing_container)]
-            purchase_option = [*re.findall("(?<=<span class=\"s-item__dynamic s-item__purchaseOptionsWithIcon\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"s-item__dynamic s-item__buyItNowOption\">).*?(?=</span>)", listing_container), *re.findall("(?<=<span class=\"s-item__purchase-options s-item__purchaseOptions\">).*?(?=</span>)", listing_container)]
-            bidcount = re.findall("(?<=<span class=\"s-item__bids s-item__bidCount\">).*?(?=</span>)", listing_container)
+            url = re.findall(r"(?<=class=s-item__link href=)https://www.ebay.\w+/itm/\d+", listing_container)
+            thumbnail = re.findall(r"https://i\.ebayimg\.com/images/g/.+?/s-l\d+\.\w+", listing_container)
+            title = [*re.findall(r"(?<=alt=\").*?(?=\"></div></a></div>)", listing_container), *re.findall(r"(?<=alt=\').*?(?=\'></div></a></div>)", listing_container)]
+            price = re.findall(r"(?<=<span class=s-item__price>).*?(?=</span></div>)", listing_container)
+            shipping = [*re.findall(r"(?<=<span class=\"s-item__dynamic s-item__freeXDays\">).*?(?=</span>)", listing_container), *re.findall(r"(?<=<span class=\"s-item__shipping s-item__logisticsCost\">).*?(?=</span>)", listing_container)]
+            purchase_option = [*re.findall(r"(?<=<span class=\"s-item__dynamic s-item__purchaseOptionsWithIcon\">).*?(?=</span>)", listing_container), *re.findall(r"(?<=<span class=\"s-item__dynamic s-item__buyItNowOption\">).*?(?=</span>)", listing_container), *re.findall(r"(?<=<span class=\"s-item__purchase-options s-item__purchaseOptions\">).*?(?=</span>)", listing_container)]
+            bidcount = re.findall(r"(?<=<span class=\"s-item__bids s-item__bidCount\">).*?(?=</span>)", listing_container)
 
             if len(url) > 0:
                 item_info["url"] = strip_excess_html(url[0])
@@ -81,4 +81,4 @@ def page_parser(request_delay, request_timeout):
     return item_info_list
 
 def strip_excess_html(string):
-    return html.unescape(re.sub("<.*?>", "", string))
+    return html.unescape(re.sub(r"<.*?>", "", string))

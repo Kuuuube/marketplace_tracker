@@ -20,16 +20,16 @@ def page_parser(request_delay, request_timeout):
             logger.error_log("Tradera request failed. Request url: " + str(request_url), traceback.format_exc())
             continue
 
-        listing_containers = re.findall("<div id=\"item-card.*?</div></div></div></div></div>", page)
+        listing_containers = re.findall(r"<div id=\"item-card.*?</div></div></div></div></div>", page)
         for listing_container in listing_containers:
             item_info = {}
-            url = re.findall("(?<=href=\")/item/.*?(?=\">)", listing_container)
-            thumbnail = re.findall("(?<=<img loading=\"lazy\" src=\").*?(?=\")", listing_container)
-            title = [*re.findall("(?<=<a data-link-type=\"next-link\" title=\").*?(?=\")", listing_container), *re.findall("(?<=<a title=\').*?(?=\')", listing_container)]
-            price = re.findall("(?<=<span class=\"text-nowrap font-weight-bold font-hansen pr-1\" data-testid=\"price\">).*?(?=</span>)", listing_container)
-            buy_it_now_price = re.findall("(?<=<span class=\"text-nowrap text-inter-light pr-1\" data-testid=\"bin-price\">).*?(?=</span>)", listing_container)
-            buy_it_now_label = re.findall("(?<=<span data-testid=\"fixedPriceLabel\" class=\"text-nowrap pr-1\">).*?(?=</span>)", listing_container)
-            bidcount = re.findall("(?<=<span class=\"text-nowrap pr-1\">).*?(?=</span>)", listing_container)
+            url = re.findall(r"(?<=href=\")/item/.*?(?=\">)", listing_container)
+            thumbnail = re.findall(r"(?<=<img loading=\"lazy\" src=\").*?(?=\")", listing_container)
+            title = [*re.findall(r"(?<=<a data-link-type=\"next-link\" title=\").*?(?=\")", listing_container), *re.findall(r"(?<=<a title=\').*?(?=\')", listing_container)]
+            price = re.findall(r"(?<=<span class=\"text-nowrap font-weight-bold font-hansen pr-1\" data-testid=\"price\">).*?(?=</span>)", listing_container)
+            buy_it_now_price = re.findall(r"(?<=<span class=\"text-nowrap text-inter-light pr-1\" data-testid=\"bin-price\">).*?(?=</span>)", listing_container)
+            buy_it_now_label = re.findall(r"(?<=<span data-testid=\"fixedPriceLabel\" class=\"text-nowrap pr-1\">).*?(?=</span>)", listing_container)
+            bidcount = re.findall(r"(?<=<span class=\"text-nowrap pr-1\">).*?(?=</span>)", listing_container)
 
             if len(url) > 0:
                 item_info["url"] = "https://www.tradera.com" + (url[0])
@@ -73,4 +73,4 @@ def page_parser(request_delay, request_timeout):
     return item_info_list
 
 def strip_excess_html(string):
-    return html.unescape(re.sub("<.*?>", "", string))
+    return html.unescape(re.sub(r"<.*?>", "", string))
