@@ -23,7 +23,7 @@ def page_parser(request_delay, request_timeout):
         listing_containers = re.findall("<div class=\"item\">.*?class=\"like_item_off\">", page)
         for listing_container in listing_containers:
             item_info = {}
-            url = re.findall("(?<=<a href=\")https://item.fril.jp/\\w+", listing_container)
+            url = re.findall("(?<=<a href=\")https://item.fril.jp/\w+", listing_container)
             thumbnail = re.findall("(?<=<img src=\").*?(?=\")", listing_container)
             title = re.findall("(?<=class=\"link_search_title\" title=\").*?(?=\" onclick)", listing_container)
             price = re.findall("(?<=<p class=\"item-box__item-price\"><span data-content=\"JPY\">¥</span><span data-content=\").*?(?=\")", listing_container)

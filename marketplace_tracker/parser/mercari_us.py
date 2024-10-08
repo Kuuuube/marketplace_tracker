@@ -47,7 +47,7 @@ def page_parser(request_delay, request_timeout):
             "categoryId": 0
         }
         
-        raw_url_params = re.findall("(?<=\\?).*", request_url)
+        raw_url_params = re.findall("(?<=\?).*", request_url)
         if len(raw_url_params) > 0:
             for raw_url_param in raw_url_params[0].split("&"):
                 raw_url_param_eq_split = raw_url_param.split("=")

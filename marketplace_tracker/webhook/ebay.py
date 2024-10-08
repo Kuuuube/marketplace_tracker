@@ -52,4 +52,4 @@ def assemble_embed_field(item):
     return assembled_string
 
 def get_bigger_thumbnail(small_thumbnail_url):
-    return re.sub("s-l\\d+", "s-l500",re.sub("thumbs/", "", small_thumbnail_url))
+    return re.sub("s-l\d+", "s-l500",re.sub("thumbs/", "", small_thumbnail_url))
