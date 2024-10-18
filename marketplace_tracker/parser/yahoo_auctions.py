@@ -31,8 +31,8 @@ def page_parser(request_delay, request_timeout):
             buy_now = re.findall(r"<span class=\"Product__label\">即決</span>", listing_container)
             price_red = re.findall(r"(?<=<span class=\"Product__priceValue u-textRed\">).*?(?=</span>)", listing_container)
             price = re.findall(r"(?<=<span class=\"Product__priceValue\">).*?(?=</span>)", listing_container)
-            bidcount = re.findall(r"(?<=<span class=\"Product__bid\">).*?(?=</span>)", listing_container)
-            time_remaining = re.findall(r"(?<=<span class=\"Product__time\">).*?(?=</span>)", listing_container)
+            bidcount = re.findall(r"(?<=<dd class=\"Product__bid\">).*?(?=</dd>)", listing_container)
+            time_remaining = re.findall(r"(?<=<dd class=\"Product__time\">).*?(?=</dd>)", listing_container)
 
             if len(url) > 0:
                 item_info["url"] = strip_excess_html(url[0])
