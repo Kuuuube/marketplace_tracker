@@ -20,7 +20,7 @@ def page_parser(request_delay, request_timeout):
             logger.error_log("eBay request failed. Request url: " + str(request_url), traceback.format_exc())
             continue
 
-        listing_containers = re.findall(r"<li data-viewport=.*?</div></li>", page)
+        listing_containers = re.findall(r"data-viewport=.*?</div></li>", page)
         for listing_container in listing_containers:
             item_info = {}
             url = re.findall(r"(?<=class=s-item__link href=)https://www.ebay.\w+/itm/\d+", listing_container)
