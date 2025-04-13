@@ -7,7 +7,7 @@ Tracks new listings on online marketplaces and posts to webhooks.
 - Blocket
 - eBay
 - Mercari JP
-- Mercari US
+- ~~Mercari US~~ (Support currently discontinued due to tightened Cloudflare bot blocking)
 - Rakuma
 - Tradera
 - Yahoo Auctions
