@@ -78,6 +78,6 @@ def try_json_unhandled(*keys, json_file):
 
 def generate_token(request_timeout):
     try:
-        return json.loads(requests.get("https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session").text, timeout=request_timeout)["bearerToken"]
+        return json.loads(requests.get("https://www.blocket.se/api/adout-api-route/refresh-token-and-validate-session", timeout=request_timeout).text)["bearerToken"]
     except Exception:
         logger.error_log("Blocket token generation failed", traceback.format_exc())
