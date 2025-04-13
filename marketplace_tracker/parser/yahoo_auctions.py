@@ -24,7 +24,7 @@ def page_parser(request_delay, request_timeout):
         listing_containers = re.findall(r"<li class=\"Product\">.*?</li>", page)
         for listing_container in listing_containers:
             item_info = {}
-            url = re.findall(r"(?<=href=\")https://page.auctions.yahoo.co.jp/jp/auction/.*?(?=\")", listing_container)
+            url = re.findall(r"(?<=href=\")https://auctions.yahoo.co.jp/jp/auction/.*?(?=\")", listing_container)
             thumbnail = re.findall(r"(?<=data-auction-img=\").*?(?=\")", listing_container)
             title = [*re.findall(r"(?<=data-auction-title=\").*?(?=\")", listing_container), *re.findall(r"(?<=data-auction-title=\').*?(?=\')", listing_container)]
             auction = re.findall(r"<span class=\"Product__label\">現在</span>", listing_container)
