@@ -89,4 +89,4 @@ while True:
             webhook_handler.send_unhandled_webhook(uptime_webhook_url, request_timeout, data = {"content": "","embeds": [{"title": "Crash in main process","description": "Attempting to recover in " + str(batch_delay) + " seconds\n```\n" + str(traceback.format_exc())[:2048] + "\n```"}]})
             time.sleep(batch_delay)
         except Exception:
-            pass
+            time.sleep(batch_delay)
